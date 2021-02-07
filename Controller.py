@@ -10,23 +10,30 @@ class Controller:
     if start.startScreenBegin() == True:
         print("starting game")
 
+    #next we'll open character select
     #returns path to images
-    #[0] is non flipped (facing right)
-    #[1] is flipped (facing left)
+    #[0] is character1
+    #[1] is character2
     pathToImages = characterSelectScreenBegin()
+
+    #then we'll play intro sequence
     Intro.Intro(pathToImages[0],pathToImages[1])
+
+    #then start game
     Game.Game(pathToImages[0],pathToImages[1])
-    end = Conclusion.Conclusion()
-    end.conclusionScreenBegin()
+
+    
+    Conclusion.Conclusion(pathToImages[0],pathToImages[1])
+
+    pygame.quit()
 
 
 
-#next we'll open character select
-#we'll return vals to pass to game (which characters)
 
-#then we'll play intro sequence
 
-#then start game
+
+
+
 
 
 #Call controller to start game

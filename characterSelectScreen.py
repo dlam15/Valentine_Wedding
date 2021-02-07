@@ -12,11 +12,11 @@ selectedCharacters = []
 move_ticker = 15
 
 class CharacterSelect(pygame.sprite.Sprite):
-    def __init__(self, multiplier, x, y, image, imageFlipped, shiftRight, shiftDown):
+    def __init__(self, multiplier, x, y, image, shiftRight, shiftDown):
         super().__init__()
         self.img = pygame.image.load(image)
         self.pathToImage = image
-        self.pathToFlippedImage = imageFlipped
+        #self.pathToFlippedImage = imageFlipped
         self.backgroundimg = pygame.image.load("valentine_pics/icon_regular.png")
         self.selectedimg = pygame.image.load("valentine_pics/icon_highlight.png")
         self.image = pygame.transform.scale(self.img,(3*multiplier,4*multiplier))#3:4 ratio works decent
@@ -51,16 +51,17 @@ class CharacterSelect(pygame.sprite.Sprite):
         global move_ticker
         global selectedCharacters
         if (self.x+15+200) > mouse[0] > (self.x+15) and (self.y+15+325) > mouse[1] > (self.y+15):
-            self.highlighted = True
+            if len(selectedCharacters) <= 1:
+                self.highlighted = True
             if self.selected == False:
                 if click[0] == 1 and move_ticker == 0:
                     print("selected")
-                    if len(selectedCharacters) == 1:
+                    if len(selectedCharacters) <= 1:
                         selectedCharacters.append(self.pathToImage)
-                    else:
-                        selectedCharacters.append(self.pathToFlippedImage)
-                    self.selected = True
-                    move_ticker = 15
+                    #else:
+                        #selectedCharacters.append(self.pathToFlippedImage)
+                        self.selected = True
+                        move_ticker = 15
             elif click[0] == 1 and self.selected == True and move_ticker == 0:
                 print("unselected")
                 selectedCharacters.remove(self.pathToImage)
@@ -84,11 +85,12 @@ def characterSelectScreenBegin():
 
     #Setting up Fonts
     font = pygame.font.SysFont("Vivaldi", 60)
+    font_small = pygame.font.SysFont("Verdana", 30)
 
     #Create a white screen
     DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
-    background = pygame.image.load('./valentine_pics/cupid2.png').convert_alpha()
+    background = pygame.image.load('./valentine_pics/cupid3.png').convert_alpha()
     backgroundImage = pygame.transform.scale(background,(SCREEN_WIDTH,SCREEN_HEIGHT))
     DISPLAYSURF.blit(backgroundImage,(0,0))
 
@@ -97,10 +99,10 @@ def characterSelectScreenBegin():
 
     #mult, pixels acrtoss, pixels down
     #FIX , ADD FLIPPED IMG AS 2nd PARAM
-    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png", "valentine_pics/bride2.png", 0,0)
-    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png","valentine_pics/bride1.png", 50,0)
-    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png","valentine_pics/groom1.png", 30,0)
-    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png","valentine_pics/groom2.png", 40,20)
+    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png", 0,0)
+    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png", 50,0)
+    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png", 30,0)
+    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png", 40,20)
 
     characters = pygame.sprite.Group()
     characters.add(c1)
@@ -134,9 +136,27 @@ def characterSelectScreenBegin():
             currChar.draw()
             currChar.checkMousedOver(mouse, click)
 
-        pygame.display.update()
+        pygame.draw.rect(DISPLAYSURF, (220,220,220),((SCREEN_WIDTH/2)-125,SCREEN_HEIGHT-(SCREEN_HEIGHT/4)+60, 230 , 50))
+        textSurf2 = font_small.render('Continue', False, (0,0,0))
+        DISPLAYSURF.blit(textSurf2,((SCREEN_WIDTH/2)-80, (SCREEN_HEIGHT-(SCREEN_HEIGHT/4))+65))
+        textSurf3 = font_small.render('Please select 2 characters to continue', False, (0,0,0))
+        DISPLAYSURF.blit(textSurf3,((SCREEN_WIDTH/2)-270, (SCREEN_HEIGHT-(SCREEN_HEIGHT/2))+20))
+        pygame.display.flip()
         FramePerSec.tick(FPS)
 
         #once 2 characters are selected, we can return to the controller
         if len(selectedCharacters) == 2:
-            return selectedCharacters
+            if (((SCREEN_WIDTH/2)-125)+(230)) > mouse[0] > ((SCREEN_WIDTH/2)-125) and ((SCREEN_HEIGHT-(SCREEN_HEIGHT/4)+60)+50) > mouse[1] > (SCREEN_HEIGHT-(SCREEN_HEIGHT/4)+60):
+                #pygame.draw.rect(gameDisplay, ac,(x,y,w,h))
+                pygame.draw.rect(DISPLAYSURF, (255,255,255),((SCREEN_WIDTH/2)-125,SCREEN_HEIGHT-(SCREEN_HEIGHT/4)+60, 230 , 50))
+                textSurf2 = font_small.render('Continue', False, (0,0,0))
+                DISPLAYSURF.blit(textSurf2,((SCREEN_WIDTH/2)-80, (SCREEN_HEIGHT-(SCREEN_HEIGHT/4))+65))
+                pygame.display.flip()
+                if click[0] == 1:
+                    return selectedCharacters
+            else:
+                pygame.draw.rect(DISPLAYSURF, (100,255,60),((SCREEN_WIDTH/2)-125,SCREEN_HEIGHT-(SCREEN_HEIGHT/4)+60, 230 , 50))
+                textSurf2 = font_small.render('Continue', False, (0,0,0))
+                DISPLAYSURF.blit(textSurf2,((SCREEN_WIDTH/2)-80, (SCREEN_HEIGHT-(SCREEN_HEIGHT/4))+65))
+                pygame.display.flip()
+
