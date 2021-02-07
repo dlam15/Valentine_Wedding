@@ -19,7 +19,6 @@ class Game:
         #6 = "Changing room 2"
         #7 = "Storage room"
         #8 = "Poster"
-        #9 = "Phone"
         self.status = [1, True]
 
         self.display = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -31,7 +30,8 @@ class Game:
         self.reception = pygame.image.load('./valentine_pics/reception_hall.png').convert_alpha()
         self.kitchen = pygame.image.load('./valentine_pics/kitchen.png').convert_alpha()
         self.change1 = pygame.image.load('./valentine_pics/changing_room1.png').convert_alpha()
-        self.change2 = pygame.image.load('./valentine_pics/changing_room2.png').convert_alpha()
+        self.change2 = pygame.image.load('./valentine_pics/changing_room2.0.png').convert_alpha()
+        self.change2_noflower = pygame.image.load('./valentine_pics/changing_room2.png').convert_alpha()
         self.storage = pygame.image.load('./valentine_pics/storageroom1.png').convert_alpha()
 
         #loading characters
@@ -88,6 +88,14 @@ class Game:
         self.flower = pygame.image.load('./valentine_pics/flower.png').convert_alpha()
         self.tie = pygame.image.load('./valentine_pics/bow_tie_red.png').convert_alpha()
         self.benches = pygame.image.load('./valentine_pics/benches.png').convert_alpha()
+        self.onerose = pygame.image.load('./valentine_pics/onerose_copy.png').convert_alpha()
+        self.tworose = pygame.image.load('./valentine_pics/tworose_copy.png').convert_alpha()
+        self.threerose = pygame.image.load('./valentine_pics/threerose_copy.png').convert_alpha()
+        self.fourrose = pygame.image.load('./valentine_pics/fourrose_copy.png').convert_alpha()
+        self.fiverose = pygame.image.load('./valentine_pics/fiverose_copy.png').convert_alpha()
+        self.phone = pygame.image.load('./valentine_pics/phone_lockscreen.png').convert_alpha()
+        self.tie = pygame.image.load('./valentine_pics/bow_tie_red_original.png').convert_alpha()
+        self.candy = pygame.image.load('./valentine_pics/chocolatebar_copy.png').convert_alpha()
 
         #adjusting size of rooms
         self.hallway = pygame.transform.scale(self.hallway,(ROOMWIDTH,HEIGHT))
@@ -96,6 +104,7 @@ class Game:
         self.kitchen = pygame.transform.scale(self.kitchen,(ROOMWIDTH,HEIGHT))
         self.change1 = pygame.transform.scale(self.change1,(ROOMWIDTH,HEIGHT))
         self.change2 = pygame.transform.scale(self.change2,(ROOMWIDTH,HEIGHT))
+        self.change2_noflower = pygame.transform.scale(self.change2,(ROOMWIDTH,HEIGHT))
         self.storage = pygame.transform.scale(self.storage,(ROOMWIDTH,HEIGHT))
 
         #adjusting miscellaneous
@@ -107,7 +116,15 @@ class Game:
         self.poster_resize = pygame.transform.scale(self.poster, (100, 100))
         self.flower = pygame.transform.scale(self.flower, (125, 125))
         self.tie = pygame.transform.scale(self.tie, (75,60))
+        self.onerose = pygame.transform.scale(self.onerose, (125, 125))
+        self.tworose = pygame.transform.scale(self.tworose, (125, 125))
+        self.threerose = pygame.transform.scale(self.threerose, (125, 125))
+        self.fourrose = pygame.transform.scale(self.fourrose, (125, 125))
+        self.fiverose = pygame.transform.scale(self.fiverose, (125, 125))
         self.benches = pygame.transform.scale(self.benches, (ROOMWIDTH,HEIGHT))
+        self.phone = pygame.transform.scale(self.phone, (75,100))
+        self.tie = pygame.transform.scale(self.tie, (100,50))
+        self.candy = pygame.transform.scale(self.candy, (100,100)) 
 
         #adjusting characters
         self.chef = pygame.transform.scale(self.chef, (125, 450))
@@ -120,12 +137,19 @@ class Game:
         self.char2 = pygame.transform.flip(self.char2, True, False)
         self.weddinghallnpc = pygame.transform.scale(self.weddinghallnpc, (125, 270))
 
+        #Setting up Fonts
+        self.font = pygame.font.SysFont("Verdana", 60)
+        self.font_small = pygame.font.SysFont("Verdana", 20)
+        self.font_s = pygame.font.SysFont("Verdana", 40)
+        
         #inventory boxes
         pygame.draw.rect(self.display, (255,0,0), [1300,0, 250, 160],4)
-        pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
-        pygame.draw.rect(self.display, (255,0,0), [1300,321, 250, 160],4)
-        pygame.draw.rect(self.display, (255,182,193), [1300,481, 250, 160],4)
-        pygame.draw.rect(self.display, (255,0,0), [1300,641, 250, 160],4)
+        text = self.font_s.render("Inventory", False, (255,182,193))
+        self.display.blit(text, (1310,80))
+        pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4) #flower & candy
+        pygame.draw.rect(self.display, (255,0,0), [1300,321, 250, 160],4) #toppers
+        pygame.draw.rect(self.display, (255,182,193), [1300,481, 250, 160],4) # bone
+        pygame.draw.rect(self.display, (255,0,0), [1300,641, 250, 160],4) #phone & tie
 
         #Setting up Fonts
         self.font = pygame.font.SysFont("Verdana", 60)
@@ -136,8 +160,10 @@ class Game:
         self.lockChef = True
         #wedding, reception, kitchen, changing room 1, changing room 2
         self.itemFlowers = [False, False, False, False, False]
+        self.flowerCounter = 0
         #changing room, girl
         self.itemToppers = [False, False]
+        self.topperCounter = 0
         self.itemTie = False
         self.itemPhone = False
         self.itemBone = False
@@ -234,6 +260,8 @@ class Game:
                             text2 = self.font_small.render("        not even yours.", False, (0,0,0))
                             text3 = self.font_small.render("Man with phone: But I am so close to beating this level. Fine here... Opps I accidentally locked it.", False, (0,0,0))
                             text4 = self.font_small.render("        You’ll need to find the owner to get the password.", False, (0,0,0))
+                            pygame.draw.rect(self.display, (255,0,0), [1300,641, 250, 160],4)
+                            self.display.blit(self.phone, (1375, 700))
                             self.display.blit(text1, (115,675))
                             self.display.blit(text2, (115,700))
                             self.display.blit(text3, (115,725))
@@ -324,8 +352,7 @@ class Game:
                         if not self.itemTie:
                             text = self.font_small.render('Is someone missing a tie? We better keep it and find who is missing it.', False, (0,0,0))
                             self.itemTie = True
-                            #TO DO add inventory image
-
+                            self.display.blit(self.tie, (1375, 700))
                             self.display.blit(self.wedding, (0,0))
                             self.display.blit(self.weddingarc, (400,75))
                             self.display.blit(self.weddinghallnpc, (725,415))
@@ -339,19 +366,27 @@ class Game:
 
                     elif self.click[0] == 1 and self.mouse[0] in range(749,821) and self.mouse[1] in range (425, 675):
                         pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
-                        if not self.itemFlowers[0] or not sel.itemFlowers[1] or not self.itemFlowers[2] \
-                           or not sel.itemFlowers[3] or not self.itemFlowers[4] or not sel.itemFlowers[5]:
+                        if self.itemFlowers[0] and self.itemFlowers[1] and self.itemFlowers[2] \
+                           and self.itemFlowers[3] and self.itemFlowers[4] and self.itemFlowers[5]:
+                            text1 = self.font_small.render('Woman: A bouquet for me? I was planning to catch the bouquet after the wedding but', False, (0,0,0))
+                            text2 = self.font_small.render('this is nice too. Thank you so much! Have some chocolate and enjoy the wedding', False, (0,0,0))
+                            self.display.blit(text1, (115,675))
+                            self.display.blit(text2, (115,700))
+                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                            self.display.blit(self.candy, (1375,190))
+                            self.itemCandy = True
+                        else:
                             text1 = self.font_small.render('Woman: It’s so incredible that they’re getting married on Valentine’s Day! I plan on getting married on', False, (0,0,0))
                             text2 = self.font_small.render('Valentine’s day too you know. I’m definitely going to get that bouquet during the toss.', False, (0,0,0))
                             self.display.blit(text1, (115,675))
                             self.display.blit(text2, (115,700))
-
-                        elif not self.itemCandy:
-                            text1 = self.font_small.render('A bouquet for me? I was planning to catch the bouquet after the wedding but', False, (0,0,0))
-                            text2 = self.font_small.render('this is nice too. Thank you so much! Have some chocolate and enjoy the wedding', False, (0,0,0))
+                        if not self.itemCandy:
+                            text1 = self.font_small.render('Woman: It’s so incredible that they’re getting married on Valentine’s Day! I plan on getting married on', False, (0,0,0))
+                            text2 = self.font_small.render('Valentine’s day too you know. I’m definitely going to get that bouquet during the toss.', False, (0,0,0))
+                            self.display.blit(self.candy, (1375,190))
                             self.display.blit(text1, (115,675))
                             self.display.blit(text2, (115,700))
-                            self.itemCandy = True
+                            
                         else:
                             text1 = self.font_small.render('Hi there! Did you like the chocolate?', False, (0,0,0))
                             self.display.blit(text1, (115,675))
@@ -370,15 +405,21 @@ class Game:
                         if not self.itemFlowers[0]:
                             pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
                             self.status = [2,True]
-                            self.display.blit(self.flower, (1375,25))
+                            self.flowerCounter = self.flowerCounter + 1
+                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                            if self.flowerCounter == 1:
+                                self.display.blit(self.onerose, (1375,190))
+                            elif self.flowerCounter == 2:
+                                self.display.blit(self.tworose, (1375, 190))
+                            elif self.flowerCounter == 3:
+                                self.display.blit(self.threerose, (1375, 190))
+                            elif self.flowerCounter == 4:
+                                self.display.blit(self.fourrose, (1375, 190))
+                            elif self.flowerCounter == 5:
+                                self.display.blit(self.fiverose, (1375, 190))
                             #pygame.display.update()
                             text = self.font_small.render('Me: Oh there is a rose on the arch, maybe this will be useful.', False, (0,0,0))
-                            '''self.display.blit(text, (115,675))
-                            #pygame.display.flip()
-                            self.display.blit(self.arrowright, (655,725))
-                            #pygame.display.flip()
-                            self.display.blit(self.arrowdown, (600,725))
-                            pygame.display.flip()'''
+                            
                             self.itemFlowers[0] = True
 
                         else:
@@ -480,7 +521,33 @@ class Game:
                     elif self.click[0] == 1 and self.mouse[0] in range(600,655) and self.mouse[1] in range (725, 775):
                         self.status = [2,True]
                         done = True
-
+                        
+                    elif self.click[0] == 1 and self.mouse[0] in range(980,1010)and self.mouse[1] in range (395, 450):
+                        if not self.itemFlowers[1]:
+                            pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                            self.itemFlowers[1]= True
+                            text = self.font_small.render('Me: Oh there is a rose in the centerpiece of the table, maybe this will be useful.', False, (0,0,0))
+                            self.flowerCounter = self.flowerCounter + 1
+                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                            if self.flowerCounter == 1:
+                                self.display.blit(self.onerose, (1375,190))
+                            elif self.flowerCounter == 2:
+                                self.display.blit(self.tworose, (1375, 190))
+                            elif self.flowerCounter == 3:
+                                self.display.blit(self.threerose, (1375, 190))
+                            elif self.flowerCounter == 4:
+                                self.display.blit(self.fourrose, (1375, 190))
+                            elif self.flowerCounter == 5:
+                                self.display.blit(self.fiverose, (1375, 190))
+                        else:
+                            pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                            self.status = [3,True]
+                            text = self.font_small.render('Me: Hmm… probably shouldn’t take anymore flowers or there would be no flowers in the centerpiece.', False, (0,0,0))
+                        self.display.blit(self.arrowright, (655,725))
+                        self.display.blit(self.arrowleft, (600,725))
+                        pygame.display.flip()
+                        self.status = [3,True]
+                            
                     elif self.click[0] == 1 and self.mouse[0] in range(625,700) and self.mouse[1] in range (315, 560):
                         pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
                         if not self.itemCandy:
@@ -541,21 +608,50 @@ class Game:
                         pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
                         if not self.itemToppers[0] or not self.itemToppers[1]:
                             text = self.font_small.render('Chef: Ohh nooo!! I lost track of the wedding toppers. Where could they have gone?', False, (0,0,0))
-                            #self.display.blit(text, (125,675))
                             self.lockChef = False
                         elif not self.itemBone:
                             text = self.font_small.render('Chef: Oh my gosh you found them! Thank you! Here take this bone I heard there was a dog here somewhere.', False, (0,0,0))
                         else:
                             text = self.font_small.render('Chef: Thanks again for the help but I’m too busy to talk right now.', False, (0,0,0))
+                            self.display.blit(self.bone, (1375, 520))
                         self.display.blit(text, (125,675))
-                        #pygame.display.flip()
+                        self.display.blit(self.arrowleft, (600,725))
+                        pygame.display.flip()
+                        self.status = [4,True]
+                        
+                    elif self.click[0] == 1 and self.mouse[0] in range(905,920) and self.mouse[1] in range (460, 490):
+                        if not self.itemFlowers[2]:
+                            pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                            self.itemFlowers[2]= True
+                            text = self.font_small.render('Me: Oh there is a rose beside the cake, maybe this will be useful.', False, (0,0,0))
+                            self.display.blit(text, (125,675))
+                            self.flowerCounter = self.flowerCounter + 1
+                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                            if self.flowerCounter == 1:
+                                self.display.blit(self.onerose, (1375,190))
+                            elif self.flowerCounter == 2:
+                                self.display.blit(self.tworose, (1375, 190))
+                            elif self.flowerCounter == 3:
+                                self.display.blit(self.threerose, (1375, 190))
+                            elif self.flowerCounter == 4:
+                                self.display.blit(self.fourrose, (1375, 190))
+                            elif self.flowerCounter == 5:
+                                self.display.blit(self.fiverose, (1375, 190))
+                        else:
+                            pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                            text = self.font_small.render('Me: Hmm… probably shouldn’t take anymore flowers or the cake won’t have any more decorations.', False, (0,0,0))
                         self.display.blit(self.arrowleft, (600,725))
                         pygame.display.flip()
                         self.status = [4,True]
 
 
     def change1(self):
-        self.display.blit(self.change1, (0,0))
+        if self.itemFlowers[3] == True:
+            self.display.blit(self.change1, (0,0))
+        else:
+            self.display.blit(self.change1, (0,0))
+            self.flower_resize = pygame.transform.scale(self.flower, (25,25))
+            self.display.blit(self.flower_resize, (85, 420))
         pygame.display.flip()
 
         self.display.blit(self.char1, (700,300))
@@ -575,8 +671,29 @@ class Game:
                     if self.click[0] == 1 and self.mouse[0] in range(1040,1240) and self.mouse[1] in range (145, 515):
                         self.status = [1,True]
                         done = True
-
-                    elif self.click[0] == 1 and self.mouse[0] in range(805,870) and self.mouse[1] in range (320, 615):
+                    elif self.click[0] == 1 and self.mouse[0] in range(85,100) and self.mouse[1] in range (400, 440):
+                        if not self.itemFlowers[4]:
+                            self.itemFlowers[4]= True
+                            self.display.blit(self.change1, (0,0))
+                            self.display.blit(self.char1, (700,300))
+                            pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                            text = self.font_small.render('Me: Oh there is a rose on the closet, maybe this will be useful.', False, (0,0,0))
+                            self.flowerCounter = self.flowerCounter + 1
+                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                            if self.flowerCounter == 1:
+                                self.display.blit(self.onerose, (1375,190))
+                            elif self.flowerCounter == 2:
+                                self.display.blit(self.tworose, (1375, 190))
+                            elif self.flowerCounter == 3:
+                                self.display.blit(self.threerose, (1375, 190))
+                            elif self.flowerCounter == 4:
+                                self.display.blit(self.fourrose, (1375, 190))
+                            elif self.flowerCounter == 5:
+                                self.display.blit(self.fiverose, (1375, 190))
+                            self.display.blit(text, (125,675))
+                            pygame.display.flip()
+                            
+                    elif self.click[0] == 1 and self.mouse[0] in range(750,870) and self.mouse[1] in range (310, 615):
                         pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
                         if self.character1 == "bride1":
                             if not self.itemToppers[0] and not self.lockChef:
@@ -596,6 +713,7 @@ class Game:
                             if not self.itemToppers[0] and not self.lockChef:
                                 text1 = self.font_small.render('Bride: Huh... the wedding toppers? Oh yes,  I found one of them over there. Here take it, you’re lucky I', False, (0,0,0))
                                 text2 = self.font_small.render("don't fire you for your incompetence.", False, (0,0,0))
+                                
                                 self.display.blit(text1, (125,675))
                                 self.display.blit(text2, (125,700))
                                 pygame.display.flip()
@@ -635,7 +753,10 @@ class Game:
                         self.status =[5,True]
 
     def change2(self):
-        self.display.blit(self.change2, (0,0))
+        if self.itemFlowers[4] == True:
+            self.display.blit(self.change2_noflower, (0,0))
+        else:
+            self.display.blit(self.change2, (0,0))
         pygame.display.flip()
 
         self.display.blit(self.char2, (925,350))
@@ -655,8 +776,30 @@ class Game:
                     if self.click[0] == 1 and self.mouse[0] in range(50,240) and self.mouse[1] in range (145, 515):
                         self.status = [1,True]
                         done = True
-
-                    if self.click[0] == 1 and self.mouse[0] in range(925,1100) and self.mouse[1] in range (350, 615):
+                    elif self.click[0] == 1 and self.mouse[0] in range(425,450) and self.mouse[1] in range (395, 435):
+                        if not self.itemFlowers[4]:
+                            self.itemFlowers[4]= True
+                            self.display.blit(self.change2_noflower, (0,0))
+                            self.display.blit(self.char2, (925,350))
+                            pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                            text = self.font_small.render('Me: Oh there is a rose on the closet, maybe this will be useful.', False, (0,0,0))
+                            self.flowerCounter = self.flowerCounter + 1
+                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                            if self.flowerCounter == 1:
+                                self.display.blit(self.onerose, (1375,190))
+                            elif self.flowerCounter == 2:
+                                self.display.blit(self.tworose, (1375, 190))
+                            elif self.flowerCounter == 3:
+                                self.display.blit(self.threerose, (1375, 190))
+                            elif self.flowerCounter == 4:
+                                self.display.blit(self.fourrose, (1375, 190))
+                            elif self.flowerCounter == 5:
+                                self.display.blit(self.fiverose, (1375, 190))
+                            self.display.blit(text, (125,675))
+                            pygame.display.flip()
+                            self.status = [6,True]
+                            
+                    elif self.click[0] == 1 and self.mouse[0] in range(925,1100) and self.mouse[1] in range (350, 615):
                         pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
                         if self.character2 == "bride1":
                             if not self.itemPhone:
@@ -675,18 +818,15 @@ class Game:
                                 text1 = self.font_small.render("Bride: My phone password for the locksmith? What's wrong with your phone? ... Fine here.", False, (0,0,0))
                                 self.lock = False
                             self.display.blit(text1, (125,675))
-                            #self.display.blit(text2, (125,700))
                             pygame.display.flip()
 
                         elif self.character2 == "groom1":
                             if not self.itemPhone:
                                 text1 = self.font_small.render('Groom: What do we do now? Is there any way to fix this? Is this a sign? Should we not get married?', False, (0,0,0))
-                                #self.display.blit(text1, (125,675))
                             else:
                                 text1 = self.font_small.render('Groom: Password to my phone? To call a locksmith? Why? Isn’t it too late to fix things?... Here take it.', False, (0,0,0))
                                 self.lock = False
                             self.display.blit(text1, (125,675))
-                            #self.display.blit(text2, (125,700))
                             pygame.display.flip()
 
                         elif self.character2 == "groom2":
@@ -696,8 +836,8 @@ class Game:
                                 text1 = self.font_small.render('Groom: Oh you want my phone password to call a locksmith? Sure thing, no problem.', False, (0,0,0))
                                 self.lock = False
                             self.display.blit(text1, (125,675))
-                            #self.display.blit(text2, (125,700))
                             pygame.display.flip()
+                     
                         self.status = [6,True]
 
     def storage(self):
@@ -720,6 +860,16 @@ class Game:
                     if self.click[0] == 1 and self.mouse[0] in range(100,375) and self.mouse[1] in range (50, 550):
                         self.status = [1,True]
                         done = True
+                    elif self.click[0] == 1 and self.mouse[0] in range(870,925) and self.mouse[1] in range (500, 675):
+                        if not self.itemBone:
+                          pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
+                          text1 = self.font_small.render('Dog: Grrrrr….', False, (0,0,0))
+                          text2 = self.font_small.render('Me:  Hmm seems like I won’t be able to get close to it.', False, (0,0,0))
+                          self.display.blit(text1, (125,675))
+                          self.display.blit(text2, (125,700))
+                          pygame.display.flip()
+                        else:
+                            self.status = [1,False]
 
     def poster(self):
         self.display.blit(self.hallway, (0,0))
