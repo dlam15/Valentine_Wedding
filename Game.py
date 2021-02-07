@@ -366,23 +366,23 @@ class Game:
                     elif self.click[0] == 1 and self.mouse[0] in range(749,821) and self.mouse[1] in range (425, 675):
                         pygame.draw.rect(self.display, (255,255,255), [100,650, 1100, 150])
                         if self.itemFlowers[0] and self.itemFlowers[1] and self.itemFlowers[2] \
-                           and self.itemFlowers[3] and self.itemFlowers[4] and self.itemFlowers[5] and not self.itemCandy:
-                            text1 = self.font_small.render('Woman: A bouquet for me? I was planning to catch the bouquet after the wedding but', False, (0,0,0))
-                            text2 = self.font_small.render('this is nice too. Thank you so much! Have some chocolate and enjoy the wedding', False, (0,0,0))
-                            self.display.blit(text1, (115,675))
-                            self.display.blit(text2, (115,700))
-                            pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
-                            self.display.blit(self.candy, (1375,190))
-                            self.itemCandy = True
+                           and self.itemFlowers[3] and self.itemFlowers[4] and self.itemFlowers[5]:
+                            if not self.itemCandy:
+                                text1 = self.font_small.render('Woman: A bouquet for me? I was planning to catch the bouquet after the wedding but', False, (0,0,0))
+                                text2 = self.font_small.render('this is nice too. Thank you so much! Have some chocolate and enjoy the wedding', False, (0,0,0))
+                                self.display.blit(text1, (115,675))
+                                self.display.blit(text2, (115,700))
+                                pygame.draw.rect(self.display, (255,182,193), [1300,161, 250, 160],4)
+                                self.display.blit(self.candy, (1375,190))
+                                self.itemCandy = True
+                            else:
+                               text1 = self.font_small.render('Hi there! Did you like the chocolate?', False, (0,0,0))
+                               self.display.blit(text1, (115,675))    
                         else:
                             text1 = self.font_small.render('Woman: It’s so incredible that they’re getting married on Valentine’s Day! I plan on getting married on', False, (0,0,0))
                             text2 = self.font_small.render('Valentine’s day too you know. I’m definitely going to get that bouquet during the toss.', False, (0,0,0))
                             self.display.blit(text1, (115,675))
                             self.display.blit(text2, (115,700))
-                            
-                        else:
-                            text1 = self.font_small.render('Hi there! Did you like the chocolate?', False, (0,0,0))
-                            self.display.blit(text1, (115,675))
 
                         self.display.blit(self.arrowright, (655,725))
                         self.display.blit(self.arrowdown, (600,725))
