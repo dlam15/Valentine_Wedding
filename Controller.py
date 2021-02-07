@@ -25,7 +25,7 @@ class Controller:
     
     Conclusion.Conclusion(pathToImages[0],pathToImages[1])
 
-    pygame.quit()
+
 
 
 

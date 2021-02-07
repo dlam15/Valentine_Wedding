@@ -82,6 +82,7 @@ class Conclusion:
                 click = pygame.mouse.get_pressed()
                 if click[0] == 1:
                     self.cont = True
+                    pygame.quit()
 
 #Conclusion('valentine_pics/groom2.png','valentine_pics/groom2.png')
 
