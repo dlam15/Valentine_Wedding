@@ -385,7 +385,7 @@ class Game:
                     self.click = pygame.mouse.get_pressed()
 
                     if self.click[0] == 1 and self.mouse[0] in range(600,655) and self.mouse[1] in range (725, 775):
-                        self.status = [2,True]
+                        self.status = [3,True]
                         done = True
                         
                     elif self.click[0] == 1 and self.mouse[0] in range(1175,1230) and self.mouse[1] in range (450, 690):
