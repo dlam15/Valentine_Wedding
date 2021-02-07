@@ -19,7 +19,7 @@ class Conclusion:
 
         #Display end pic
         self.display = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-        self.image1 = pygame.image.load('./valentine_pics/endinghall.png').convert()
+        self.image1 = pygame.image.load('./valentine_pics/endinghall2.png').convert()
         self.image1 = pygame.transform.scale(self.image1,(SCREEN_WIDTH,SCREEN_HEIGHT))
         self.display.blit(self.image1,(0,0))
 
