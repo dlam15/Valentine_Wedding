@@ -37,6 +37,10 @@ class Game:
         self.change2 = pygame.image.load('./valentine_pics/changing_room2.png').convert_alpha()#for pixel transparency
         self.storage = pygame.image.load('./valentine_pics/storageroom1.png').convert_alpha()#for pixel transparency
 
+        #loading characters
+        self.char1 = pygame.image.load(self.character1).convert_alpha() #for pixel transparency
+        self.char2 = pygame.image.load(self.character2).convert_alpha() #for pixel transparency
+
         #loading miscellaneous
         self.weddingarc = pygame.image.load('./valentine_pics/weddingarch1.png').convert_alpha()#for pixel transparency
         self.arrowright = pygame.image.load('./valentine_pics/arrow_right.png').convert_alpha()#for pixel transparency
@@ -62,6 +66,12 @@ class Game:
         self.arrowleft = pygame.transform.scale (self.arrowleft, (50,50))
         self.door = pygame.transform.scale(self.door, (275, 500))
         self.poster_resize = pygame.transform.scale(self.poster, (100, 100))
+
+        #adjusting characters
+        self.char1 = pygame.transform.scale(self.char1, (250,404))
+        self.char2 = pygame.transform.scale(self.char2, (250,325))
+        self.char1 = pygame.transform.flip(self.char1, True, False)
+        self.char2 = pygame.transform.flip(self.char2, True, False)
 
         #inventory boxes
         pygame.draw.rect(self.display, (255,0,0), [1300,0, 250, 160],4)
@@ -135,8 +145,6 @@ class Game:
                         #time.sleep(3)
                         self.status = [1,True]
                         #done = True
-
-        #self.status = [2,True]
         
     def wedding(self):
         self.display.blit(self.wedding, (0,0))
@@ -169,8 +177,6 @@ class Game:
                     elif self.click[0] == 1 and self.mouse[0] in range(600,655) and self.mouse[1] in range (725, 775):
                         self.status = [1,True]
                         done = True
-                
-        #self.status = [3,True]
         
     def reception(self):
         self.display.blit(self.reception, (0,0))
@@ -200,7 +206,6 @@ class Game:
                     elif self.click[0] == 1 and self.mouse[0] in range(600,655) and self.mouse[1] in range (725, 775):
                         self.status = [2,True]
                         done = True
-        #self.status = [4,True]
         
     def kitchen(self):
         self.display.blit(self.kitchen, (0,0))
@@ -223,29 +228,12 @@ class Game:
                     if self.click[0] == 1 and self.mouse[0] in range(600,655) and self.mouse[1] in range (725, 775):
                         self.status = [2,True]
                         done = True
-        #self.status = [5,True]
         
     def change1(self):
         self.display.blit(self.change1, (0,0))
         pygame.display.update()
 
-        pygame.event.clear()
-        done = False
-        while not done:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    done = True
-                    self.status = [1,False]
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.mouse = pygame.mouse.get_pos()
-                    self.click = pygame.mouse.get_pressed()
-                    if self.click[0] == 1 and self.mouse[0] in range(1040,1240) and self.mouse[1] in range (145, 515):
-                        self.status = [1,True]
-                        done = True
-        #self.status = [6,True]
-        
-    def change2(self):
-        self.display.blit(self.change2, (0,0))
+        self.display.blit(self.char1, (700,300))
         pygame.display.update()
 
         pygame.event.clear()
@@ -257,12 +245,33 @@ class Game:
                     self.status = [1,False]
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse = pygame.mouse.get_pos()
+                    print(pygame.mouse.get_pos())
+                    self.click = pygame.mouse.get_pressed()
+                    if self.click[0] == 1 and self.mouse[0] in range(1040,1240) and self.mouse[1] in range (145, 515):
+                        self.status = [1,True]
+                        done = True
+        
+    def change2(self):
+        self.display.blit(self.change2, (0,0))
+        pygame.display.update()
+
+        self.display.blit(self.char2, (925,300))
+        pygame.display.update()
+
+        pygame.event.clear()
+        done = False
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+                    self.status = [1,False]
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.mouse = pygame.mouse.get_pos()
+                    print(pygame.mouse.get_pos())
                     self.click = pygame.mouse.get_pressed()
                     if self.click[0] == 1 and self.mouse[0] in range(50,240) and self.mouse[1] in range (145, 515):
                         self.status = [1,True]
                         done = True
-                    
-        #self.status = [7,True]
         
     def storage(self):
         self.display.blit(self.storage, (0,0))
@@ -284,7 +293,6 @@ class Game:
                     if self.click[0] == 1 and self.mouse[0] in range(100,375) and self.mouse[1] in range (50, 550):
                         self.status = [1,True]
                         done = True
-        #self.status = [2,False]
 
     def poster(self):
         self.display.blit(self.hallway, (0,0))
@@ -310,4 +318,4 @@ class Game:
                         self.status = [1,True]
                         done = True
         
-Game("bride1", "bride2")
+Game('./valentine_pics/bride1_copy.png', './valentine_pics/bride2_copy.png')
