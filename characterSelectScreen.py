@@ -5,7 +5,7 @@ from pygame.locals import *
 import random, time
 
 #Other Variables for use in the program
-SCREEN_WIDTH = 1300
+SCREEN_WIDTH = 1550
 SCREEN_HEIGHT = 800
 DISPLAYSURF = ""
 selectedCharacters = []
@@ -97,12 +97,12 @@ def characterSelectScreenBegin():
 
     pygame.display.set_caption("Character Select")
 
-    #mult, pixels acrtoss, pixels down
+    #mult, pixels down, pixels across
     #FIX , ADD FLIPPED IMG AS 2nd PARAM
-    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png", 0,0)
-    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png", 50,0)
-    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png", 30,0)
-    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png", 40,20)
+    c1 = CharacterSelect(150, 200, 75, "valentine_pics/bride2.png", 0,0)
+    c2 = CharacterSelect(150, 1000, 75, "valentine_pics/bride1.png", 50,0)
+    c3 = CharacterSelect(150, 200, 425, "valentine_pics/groom1.png", 30,0)
+    c4 = CharacterSelect(150, 1000, 425, "valentine_pics/groom2.png", 40,20)
 
     characters = pygame.sprite.Group()
     characters.add(c1)
@@ -159,4 +159,3 @@ def characterSelectScreenBegin():
                 textSurf2 = font_small.render('Continue', False, (0,0,0))
                 DISPLAYSURF.blit(textSurf2,((SCREEN_WIDTH/2)-80, (SCREEN_HEIGHT-(SCREEN_HEIGHT/4))+65))
                 pygame.display.flip()
-

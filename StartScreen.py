@@ -5,7 +5,7 @@ from pygame.locals import *
 import random, time
 
 #Other Variables for use in the program
-SCREEN_WIDTH = 1300
+SCREEN_WIDTH = 1550
 SCREEN_HEIGHT = 800
 
 
@@ -36,7 +36,7 @@ class StartScreen:
         textSurf2 = self.font_small.render('Play Game', False, (0,0,0))
         self.display.blit(textSurf2,((SCREEN_WIDTH/2)-80, (SCREEN_HEIGHT-(SCREEN_HEIGHT/4))-20))
         pygame.display.flip()
-    
+
 
     def startScreenBegin(self):
 
@@ -50,7 +50,7 @@ class StartScreen:
                     pygame.quit()
                     sys.exit()
 
-    
+
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
             #print(click)
@@ -67,4 +67,3 @@ class StartScreen:
                 textSurf2 = self.font_small.render('Play Game', False, (0,0,0))
                 self.display.blit(textSurf2,((SCREEN_WIDTH/2)-80, (SCREEN_HEIGHT-(SCREEN_HEIGHT/4))-20))
                 pygame.display.flip()
-
