@@ -5,14 +5,11 @@ HEIGHT = 800
 ROOMWIDTH = 1300
 
 class Game:
-    character1 = None
-    character2 = None
-
     
     def __init__ (self, character1, character2):
         pygame.init()
-        self.character1 = character1
-        self.character2 = character2
+        self.character1 = Game.characterName(self, character1)
+        self.character2 = Game.characterName(self, character2)
 
         #1 = "Hallway"
         #2 = "Wedding hall"
@@ -554,5 +551,8 @@ class Game:
                     if self.click[0] == 1 and self.mouse[0] in range(425,1000) and self.mouse[1] in range (25, 650):
                         self.status = [1,True]
                         done = True
-        
-Game("groom1", "groom2")
+
+    def characterName(self, file):
+        temp = file.split('/')[1]
+        return(temp.split('.')[0])
+#Game("groom1", "groom2")
