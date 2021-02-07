@@ -9,12 +9,14 @@ SCREEN_WIDTH = 1300
 SCREEN_HEIGHT = 800
 DISPLAYSURF = ""
 selectedCharacters = []
-move_ticker = 0
+move_ticker = 15
 
 class CharacterSelect(pygame.sprite.Sprite):
-    def __init__(self, multiplier, x, y, image, shiftRight, shiftDown):
+    def __init__(self, multiplier, x, y, image, imageFlipped, shiftRight, shiftDown):
         super().__init__()
         self.img = pygame.image.load(image)
+        self.pathToImage = image
+        self.pathToFlippedImage = imageFlipped
         self.backgroundimg = pygame.image.load("valentine_pics/icon_regular.png")
         self.selectedimg = pygame.image.load("valentine_pics/icon_highlight.png")
         self.image = pygame.transform.scale(self.img,(3*multiplier,4*multiplier))#3:4 ratio works decent
@@ -53,14 +55,17 @@ class CharacterSelect(pygame.sprite.Sprite):
             if self.selected == False:
                 if click[0] == 1 and move_ticker == 0:
                     print("selected")
-                    selectedCharacters.append(self.img)
+                    if len(selectedCharacters) == 1:
+                        selectedCharacters.append(self.pathToImage)
+                    else:
+                        selectedCharacters.append(self.pathToFlippedImage)
                     self.selected = True
-                    move_ticker = 30
+                    move_ticker = 15
             elif click[0] == 1 and self.selected == True and move_ticker == 0:
                 print("unselected")
-                selectedCharacters.remove(self.img)
+                selectedCharacters.remove(self.pathToImage)
                 self.selected = False
-                move_ticker = 30
+                move_ticker = 15
         else:
             self.highlighted = False
 
@@ -91,10 +96,11 @@ def characterSelectScreenBegin():
     pygame.display.set_caption("Character Select")
 
     #mult, pixels acrtoss, pixels down
-    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png", 0,0)
-    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png",50,0)
-    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png",30,0)
-    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png",40,20)
+    #FIX , ADD FLIPPED IMG AS 2nd PARAM
+    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png", "valentine_pics/bride2.png", 0,0)
+    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png","valentine_pics/bride1.png", 50,0)
+    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png","valentine_pics/groom1.png", 30,0)
+    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png","valentine_pics/groom2.png", 40,20)
 
     characters = pygame.sprite.Group()
     characters.add(c1)
