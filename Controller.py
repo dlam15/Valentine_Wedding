@@ -1,11 +1,15 @@
 import StartScreen
-
+from characterSelectScreen import characterSelectScreenBegin
 
 class Controller:
     #first we open start screen
     start = StartScreen.StartScreen()
     if start.startScreenBegin() == True:
         print("starting game")
+
+    characterSelectScreenBegin()
+
+
 
 #next we'll open character select
 #we'll return vals to pass to game (which characters)

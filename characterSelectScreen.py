@@ -12,14 +12,14 @@ selectedCharacters = []
 move_ticker = 0
 
 class CharacterSelect(pygame.sprite.Sprite):
-    def __init__(self, multiplier, x, y, image):
+    def __init__(self, multiplier, x, y, image, shiftRight, shiftDown):
         super().__init__()
         self.img = pygame.image.load(image)
         self.backgroundimg = pygame.image.load("valentine_pics/icon_regular.png")
         self.selectedimg = pygame.image.load("valentine_pics/icon_highlight.png")
         self.image = pygame.transform.scale(self.img,(3*multiplier,4*multiplier))#3:4 ratio works decent
         self.background = pygame.transform.scale(self.backgroundimg,(3*multiplier,4*multiplier))
-        self.backgroundselected = pygame.transform.scale(self.selectedimg,(3*multiplier,4*multiplier))
+        self.backgroundselected = pygame.transform.scale(self.selectedimg,(3*(multiplier-20),4*(multiplier-20)))
         self.frameOne = (x+15, y+15, 200, 325)
         self.frameTwo = (x+20,y+20, 190, 315)
         self.x = x
@@ -27,97 +27,45 @@ class CharacterSelect(pygame.sprite.Sprite):
         self.selected = False
         self.highlighted = False
         self.prev = "00";
+        self.shiftRight = shiftRight
+        self.shiftDown = shiftDown
 
     def draw(self):
         if self.selected == False and self.highlighted == False:
             #regular background
             DISPLAYSURF.blit(self.background,(self.x,self.y))
-            DISPLAYSURF.blit(self.image,(self.x,self.y))
+            DISPLAYSURF.blit(self.image,(self.x + self.shiftRight, self.y + self.shiftDown))
             if self.prev != "00":
-                redraw()
                 self.prev = "00"
-        if self.selected == False and self.highlighted == True:
+        else:
             #highlighted background
-            DISPLAYSURF.blit(self.backgroundselected,(self.x,self.y))
-            DISPLAYSURF.blit(self.image,(self.x,self.y))
+            DISPLAYSURF.blit(self.backgroundselected,(self.x+10,self.y+20))
+            DISPLAYSURF.blit(self.image,(self.x + self.shiftRight, self.y + self.shiftDown))
             if self.prev != "01":
-                redraw()
                 self.prev = "01"
-        if self.selected == True and self.highlighted == True:
-            #highlighted background, even on move away
-            DISPLAYSURF.blit(self.backgroundselected,(self.x,self.y))
-            DISPLAYSURF.blit(self.image,(self.x,self.y))
-            if self.prev != "11":
-                redraw()
-                self.prev = "11"
+
 
     def checkMousedOver(self, mouse, click):
         global move_ticker
         global selectedCharacters
         if (self.x+15+200) > mouse[0] > (self.x+15) and (self.y+15+325) > mouse[1] > (self.y+15):
             self.highlighted = True
-            #redraw()
             if self.selected == False:
-                #pygame.draw.rect(DISPLAYSURF, (0,0,0), self.frameOne)#black
-                #pygame.draw.rect(DISPLAYSURF, (255,255,255), self.frameTwo)#white
-                #DISPLAYSURF.blit(self.backgroundselected,(self.x,self.y))
-                #self.draw()#char
                 if click[0] == 1 and move_ticker == 0:
                     print("selected")
                     selectedCharacters.append(self.img)
                     self.selected = True
-                    #redraw()
                     move_ticker = 30
-                    #redraw()
             elif click[0] == 1 and self.selected == True and move_ticker == 0:
                 print("unselected")
                 selectedCharacters.remove(self.img)
                 self.selected = False
-                #redraw()
                 move_ticker = 30
         else:
             self.highlighted = False
-            #redraw()
-        #elif self.selected == False:
-            #pygame.draw.rect(DISPLAYSURF, (255,255,255), self.frameOne)
-            #DISPLAYSURF.blit(self.background,(self.x,self.y))
-            #self.draw()
 
 
 
-
-"""
-    def checkMousedOver(self, mouse, click):
-        global move_ticker
-        global selectedCharacters
-        if (self.x+15+200) > mouse[0] > (self.x+15) and (self.y+15+325) > mouse[1] > (self.y+15):
-            self.highlighted = True
-            if self.selected == False:
-                #print("almost")
-                #pygame.draw.rect(DISPLAYSURF, (0,0,0), self.frameOne)#black
-                #pygame.draw.rect(DISPLAYSURF, (255,255,255), self.frameTwo)#white
-                DISPLAYSURF.blit(self.backgroundselected,(self.x,self.y))
-                self.draw()#char
-                if click[0] == 1 and move_ticker == 0:
-                    print("selected")
-                    selectedCharacters.append(self.img)
-                    self.selected = True
-                    move_ticker = 30
-                    redraw()
-            elif click[0] == 1 and self.selected == True and move_ticker == 0:
-                print("unselected")
-                selectedCharacters.remove(self.img)
-                self.selected = False
-                move_ticker = 30
-        elif self.selected == False:
-            pygame.draw.rect(DISPLAYSURF, (255,255,255), self.frameOne)
-            DISPLAYSURF.blit(self.background,(self.x,self.y))
-            self.draw()
-"""
-
-def redraw():
-    print("redraw")
-    DISPLAYSURF.fill((255,255,255))
 
 def characterSelectScreenBegin():
     global DISPLAYSURF
@@ -131,20 +79,22 @@ def characterSelectScreenBegin():
 
     #Setting up Fonts
     font = pygame.font.SysFont("Vivaldi", 60)
-    font_small = pygame.font.SysFont("Verdana", 30)
 
     #Create a white screen
     DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-    DISPLAYSURF.fill((255,255,255))
+
+    background = pygame.image.load('./valentine_pics/cupid2.png').convert_alpha()
+    backgroundImage = pygame.transform.scale(background,(SCREEN_WIDTH,SCREEN_HEIGHT))
+    DISPLAYSURF.blit(backgroundImage,(0,0))
 
 
     pygame.display.set_caption("Character Select")
 
     #mult, pixels acrtoss, pixels down
-    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png")
-    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png")
-    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png")
-    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png")
+    c1 = CharacterSelect(150, 150, 75, "valentine_pics/bride2.png", 0,0)
+    c2 = CharacterSelect(150, 800, 75, "valentine_pics/bride1.png",50,0)
+    c3 = CharacterSelect(150, 150, 425, "valentine_pics/groom1.png",30,0)
+    c4 = CharacterSelect(150, 800, 425, "valentine_pics/groom2.png",40,20)
 
     characters = pygame.sprite.Group()
     characters.add(c1)
@@ -175,12 +125,12 @@ def characterSelectScreenBegin():
 
         #Moves and Re-draws all Sprites
         for currChar in characters:
-            #if currChar.selected == False:
             currChar.draw()
             currChar.checkMousedOver(mouse, click)
 
         pygame.display.update()
         FramePerSec.tick(FPS)
 
+        #once 2 characters are selected, we can return to the controller
         if len(selectedCharacters) == 2:
             return selectedCharacters
