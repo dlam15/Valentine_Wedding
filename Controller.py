@@ -1,4 +1,6 @@
 import StartScreen
+import Intro
+import Game
 import Conclusion
 from characterSelectScreen import characterSelectScreenBegin
 
@@ -8,20 +10,30 @@ class Controller:
     if start.startScreenBegin() == True:
         print("starting game")
 
+    #next we'll open character select
     #returns path to images
-    #[0] is non flipped (facing right)
-    #[1] is flipped (facing left)
+    #[0] is character1
+    #[1] is character2
     pathToImages = characterSelectScreenBegin()
 
-    end = Conclusion.Conclusion()
-    end.conclusionScreenBegin()
+    #then we'll play intro sequence
+    Intro.Intro(pathToImages[0],pathToImages[1])
 
-#next we'll open character select
-#we'll return vals to pass to game (which characters)
+    #then start game
+    Game.Game(pathToImages[0],pathToImages[1])
 
-#then we'll play intro sequence
+    
+    Conclusion.Conclusion(pathToImages[0],pathToImages[1])
 
-#then start game
+
+
+
+
+
+
+
+
+
 
 
 #Call controller to start game
