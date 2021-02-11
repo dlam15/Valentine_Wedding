@@ -889,6 +889,7 @@ class Game:
                           self.display.blit(text2, (125,700))
                           pygame.display.flip()
                         else:
+                            done = True
                             self.status = [1,False]
 
     def poster(self):
